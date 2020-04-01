@@ -1,34 +1,40 @@
-" if vim-plug not installed, install and load plugins
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall | source ~/.config/nvim/init.vim
-endif
-
-if (has("nvim"))
-  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
-
 if (has("termguicolors"))
   set termguicolors
 endif
 
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin('~/.vim/autoload')
 
+" Theme
+"Plug 'drewtempelmeyer/palenight.vim'
+Plug 'cocopon/iceberg.vim'
+
+" Syntax help
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'prettier/vim-prettier', {'do': 'npm install'}
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'leafgarland/typescript-vim'
-Plug 'chrisbra/sudoedit.vim'
+Plug 'HerringtonDarkholme/yats.vim' " TS Syntax
 Plug 'stephpy/vim-yaml'
-Plug 'mattn/emmet-vim'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'vim-airline/vim-airline'
+
+" UI Enhancements
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
+Plug 'vim-airline/vim-airline'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'ryanoasis/vim-devicons'
+Plug 'luochen1990/rainbow'
+Plug 'nathanaelkane/vim-indent-guides'
+
+" Editor Enhancements
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'chrisbra/sudoedit.vim'
+Plug 'mattn/emmet-vim'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
+
+" copy yanked text to the clipboard
+set clipboard=unnamedplus
 
 " add line number in the gutter
 set number
@@ -43,7 +49,7 @@ set tabstop=2
 
 " set themes
 set background=dark
-colorscheme palenight
+colorscheme iceberg
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -64,6 +70,44 @@ set shortmess+=c
 " always show signcolumns
 set signcolumn=yes
 
+set guifont=Hasklug\ Nerd\ Font\ 16
+
+set wrap
+set linebreak
+" note trailing space at end of next line
+set showbreak=>\ \ \
+
+autocmd FileType js,ts,yaml,json,html,css autocmd BufWritePre <buffer> %s/\s\+$//e
+
+" airline
+let g:airline_powerline_fonts = 1
+
+" Nerd Tree
+let g:NERDTreeIgnore = ['^node_modules$']
+let g:NERDTreeGitStatusWithFlags = 1
+
+nmap <C-n> :NERDTreeToggle<CR>
+vmap ++ <plug>NERDCommenterToggle
+nmap ++ <plug>NERDCommenterToggle
+
+" ctrlp
+let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
+
+" emmet
+let g:user_emmet_install_global = 0
+let g:user_emmet_mode='a'
+autocmd FileType html,css EmmetInstall
+
+" Rainbow
+let g:rainbow_active = 1
+
+"indent lines
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+let g:indent_guides_start_level = 2
+let g:indent_guides_guide_size = 1
+
+" coc configuration spam
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
@@ -144,6 +188,9 @@ omap af <Plug>(coc-funcobj-a)
 nmap <silent> <TAB> <Plug>(coc-range-select)
 xmap <silent> <TAB> <Plug>(coc-range-select)
 
+" prettier format on save
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
@@ -173,3 +220,12 @@ nnoremap <silent> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ ]
