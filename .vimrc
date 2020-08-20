@@ -1,12 +1,7 @@
-if (has("termguicolors"))
-  set termguicolors
-endif
-
 call plug#begin('~/.vim/autoload')
 
 " Theme
-"Plug 'drewtempelmeyer/palenight.vim'
-Plug 'cocopon/iceberg.vim'
+Plug 'arcticicestudio/nord-vim'
 
 " Syntax help
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -47,9 +42,13 @@ set expandtab
 set shiftwidth=2
 set tabstop=2
 
+" set terminal
+set term=screen-256color
+
 " set themes
 set background=dark
-colorscheme iceberg
+set t_Co=256
+colorscheme nord
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -69,8 +68,6 @@ set shortmess+=c
 
 " always show signcolumns
 set signcolumn=yes
-
-set guifont=Hasklug\ Nerd\ Font\ 16
 
 set wrap
 set linebreak
@@ -108,6 +105,8 @@ let g:indent_guides_start_level = 2
 let g:indent_guides_guide_size = 1
 
 " coc configuration spam
+let g:coc_disable_startup_warning=1
+
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
